@@ -1,0 +1,27 @@
+=========================================
+===           Bolverk v0.1            ===
+===         By Andrew Buntine         ===
+=========================================
+
+1) Definition
+
+  Bolverk is an emulator for a typical machine language. I have developed it in an attempt to
+  better understand the way machines work at a low-level.
+
+  Programs are written in Base-16 (hexadecimal). The language design is based on the one described
+  in J. Glenn Brookshears textbook -- Computer Science: An Overview (3rd edition, 1991).
+
+2) Architecture
+
+  - The machine has 16 registers identified in hexadecimal as R0 through to RF.
+  - Each register can hold 8 bits (one byte).
+  - Main memory consists of 256 cells.
+  - Each memory cell can hold 8 bits (one byte).
+  - Memory cells can be referenced in hexadecimal as 00 (00000000) to FF (11111111).
+
+3) Machine Language
+
+  - Machine instructions are 16 bits (two bytes) in length.
+  - The first 4 bits make up the op-code. The following 12 bits make up the operand field.
+  - See the LANGUAGE_SPEC document for a listing of the available instrctions.
+
