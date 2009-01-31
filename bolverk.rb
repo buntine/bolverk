@@ -10,9 +10,9 @@ class Bolverk
   # A program must be passed in as an array of individual
   # instructions.
   def load_program_into_memory(program=[])
-    program.each_with_index do |index, instruction|
+    program.each_with_index do |instruction, index|
       binary = convert_from_hex_to_binary(instruction)
-      cell = index * 2
+      cell = index * 4
 
       insert_instruction_into_memory(binary, cell)
     end
@@ -23,16 +23,16 @@ class Bolverk
     # Returns an 8-bit string. Smaller values are padded
     # with zeros.
     def convert_from_hex_to_binary(data="")
-      data.hex.to_s(base=2).rjust(8, "0")
+      data.hex.to_s(base=2).rjust(32, "0")
     end
 
     # Each instruction requires four cells of main memory, so
     # we snap the instruction into byte-size chunks.
     def insert_instruction_into_memory(instruction, cell=0)
-      @main_memory[cell] = instruction[0, 8]
-      @main_memory[cell + 1] = instruction[8, 16]
-      @main_memory[cell + 2] = instruction[16, 24]
-      @main_memory[cell + 3] = instruction[24, 32]
+      @main_memory[cell] = instruction[0..7]
+      @main_memory[cell + 1] = instruction[8..15]
+      @main_memory[cell + 2] = instruction[16..23]
+      @main_memory[cell + 3] = instruction[24..31]
     end
 
 end
