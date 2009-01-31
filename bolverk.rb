@@ -12,7 +12,7 @@ class Bolverk
   def load_program_into_memory(program=[])
     program.each_with_index do |instruction, index|
       binary = convert_from_hex_to_binary(instruction)
-      cell = index * 4
+      cell = index * 2
 
       insert_instruction_into_memory(binary, cell)
     end
@@ -20,19 +20,17 @@ class Bolverk
 
   private
 
-    # Returns an 8-bit string. Smaller values are padded
+    # Returns an 16-bit string. Smaller values are padded
     # with zeros.
     def convert_from_hex_to_binary(data="")
-      data.hex.to_s(base=2).rjust(32, "0")
+      data.hex.to_s(base=2).rjust(16, "0")
     end
 
-    # Each instruction requires four cells of main memory, so
+    # Each instruction requires two cells of main memory, so
     # we snap the instruction into byte-size chunks.
     def insert_instruction_into_memory(instruction, cell=0)
       @main_memory[cell] = instruction[0..7]
       @main_memory[cell + 1] = instruction[8..15]
-      @main_memory[cell + 2] = instruction[16..23]
-      @main_memory[cell + 3] = instruction[24..31]
     end
 
 end
