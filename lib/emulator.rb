@@ -18,12 +18,33 @@ class Bolverk::Emulator
     end
   end
 
+  def load_value_into_memory(memory_cell, data="00000000")
+    cell = memory_cell.hex
+    @main_memory[cell] = convert_from_hex_to_binary(data, 8)
+  end
+
+  def load_values_into_memory(memory_cell, data=[])
+    data.each_with_index do |code, index|
+      cell = memory_cell.hex + index
+      cell = cell.to_s(base=16)
+      load_value_into_memory(cell, code)
+    end
+  end
+
   private
 
-    # Returns an 16-bit string. Smaller values are padded
+    # Returns an n-bit string. Smaller values are padded
     # with zeros.
-    def convert_from_hex_to_binary(data="")
-      data.hex.to_s(base=2).rjust(16, "0")
+    def convert_from_hex_to_binary(data="", size=16)
+      data.hex.to_s(base=2).rjust(size, "0")
+
+    #  codes = data.split //
+
+#      codes.map! do |code|
+#        code.hex.to_s(base=2).rjust(4, "0")
+#      end
+
+#      codes.join
     end
 
     # Each instruction requires two cells of main memory, so
