@@ -18,11 +18,16 @@ class Bolverk::Emulator
     end
   end
 
-  def load_value_into_memory(memory_cell, data="00000000")
+  # Loads a single value into memory at memory location specified
+  # by memory_cell. Values and memory addresses should be passed
+  # in as hexadecimal.
+  def load_value_into_memory(memory_cell, data="00")
     cell = memory_cell.hex
     @main_memory[cell] = convert_from_hex_to_binary(data, 8)
   end
 
+  # Loads an array of hexadecimal values into main memory, starting
+  # at memory address specified by memory_cell.
   def load_values_into_memory(memory_cell, data=[])
     data.each_with_index do |code, index|
       cell = memory_cell.hex + index
