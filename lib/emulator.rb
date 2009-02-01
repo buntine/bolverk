@@ -1,22 +1,22 @@
 class Bolverk::Emulator
-  attr_reader :main_memory, :registers
+  attr_reader :main_memory, :registers, :program_counter, :instruction_register
 
   # Class-mapping for instruction codes.
   @operation_codes = {
-    :0001 => Bolverk::Operations::LoadFromMemory,
-    :0010 => Bolverk::Operations::LoadFromValue,
-    :0011 => Bolverk::Operations::Store,
-    :0100 => Bolverk::Operations::Move,
-    :0101 => Bolverk::Operations::AddBinary,
-    :0110 => Bolverk::Operations::AddFloatingPoint,
-    :0111 => Bolverk::Operations::Or,
-    :1000 => Bolverk::Operations::And,
-    :1001 => Bolverk::Operations::Xor,
-    :1010 => Bolverk::Operations::Rotate,
-    :1011 => Bolverk::Operations::Jump,
-    :1100 => Bolverk::Operations::Beep,
-    :1101 => Bolverk::Operations::Print,
-    :1110 => Bolverk::Operations::Halt,
+#    "0001" => Bolverk::Operations::LoadFromMemory,
+#    "0010" => Bolverk::Operations::LoadFromValue,
+#    "0011" => Bolverk::Operations::Store,
+#    "0100" => Bolverk::Operations::Move,
+#    "0101" => Bolverk::Operations::AddBinary,
+#    "0110" => Bolverk::Operations::AddFloatingPoint,
+#    "0111" => Bolverk::Operations::Or,
+#    "1000" => Bolverk::Operations::And,
+#    "1001" => Bolverk::Operations::Xor,
+#    "1010" => Bolverk::Operations::Rotate,
+#    "1011" => Bolverk::Operations::Jump,
+#    "1100" => Bolverk::Operations::Beep,
+#    "1101" => Bolverk::Operations::Print,
+#    "1110" => Bolverk::Operations::Halt,
   }
 
   def initialize
@@ -54,7 +54,11 @@ class Bolverk::Emulator
     end
   end
 
-  # 
+  # Returns the value of memory cell identified by memory_cell.
+  def fetch_value_from_memory(memory_cell)
+    cell = memory_cell.hex
+    @main_memory[cell]
+  end
 
   private
 
@@ -62,14 +66,6 @@ class Bolverk::Emulator
     # with zeros.
     def convert_from_hex_to_binary(data="", size=16)
       data.hex.to_s(base=2).rjust(size, "0")
-
-    #  codes = data.split //
-
-#      codes.map! do |code|
-#        code.hex.to_s(base=2).rjust(4, "0")
-#      end
-
-#      codes.join
     end
 
     # Each instruction requires two cells of main memory, so

@@ -122,4 +122,22 @@ describe Bolverk::Emulator do
 
   end
 
+  describe "when fetching a value from memory" do
+
+    before(:all) do
+      @machine = Bolverk::Emulator.new
+      @machine.load_value_into_memory("A3", "B6")
+    end
+
+    it "should return the correct value" do
+      # B6 is 10110110 in binary.
+
+      @machine.fetch_value_from_memory("A3").should eql("10110110")
+    end
+
+    it "should return all zeroes from empty cell" do
+      @machine.fetch_value_from_memory("13").should eql("00000000")
+    end
+  end
+
 end
