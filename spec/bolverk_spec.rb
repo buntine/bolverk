@@ -27,7 +27,7 @@ describe Bolverk::Emulator do
 
     before(:all) do
       @machine = Bolverk::Emulator.new
-      @machine.load_program_into_memory([ '3A06', '14E2', 'C000' ])
+      @machine.load_program_into_memory("00", [ '3A06', '14E2', 'C000' ])
     end
 
     it "should modify main memory" do
@@ -53,6 +53,30 @@ describe Bolverk::Emulator do
     end
 
     it "should raise exception if program is too large for memory"
+
+    it "should raise exception if memory cell does not exist"
+
+  end
+
+  describe "when inserting a program into an arbitrary area of memory" do
+
+    before(:all) do
+      @machine = Bolverk::Emulator.new
+      @machine.load_program_into_memory("A0", [ '3A34', 'B4E2', 'C000' ])
+    end
+
+    it "should insert the program into the correct area of memory" do
+      # NOTE: This is equivelant to [ A3, 34, B4, E2, C0, 00 ]
+      encoded_program = ["00111010", "00110100", "10110100",
+                         "11100010", "11000000", "00000000"]
+
+      @machine.main_memory[160..165].should eql(encoded_program)
+    end
+
+    it "should leave the rest of main memory alone" do
+      @machine.main_memory[0..159].should eql([ "0" * 8 ] * 160)
+      @machine.main_memory[165..255].should eql([ "0" * 8 ] * 91)
+    end
 
   end
 
@@ -138,6 +162,42 @@ describe Bolverk::Emulator do
     it "should return all zeroes from empty cell" do
       @machine.fetch_value_from_memory("13").should eql("00000000")
     end
+
+    it "should raise exception if the memory cell does not exist"
+
+  end
+
+  describe "when initialising a program in memory" do
+
+    before(:all) do
+      @machine = Bolverk::Emulator.new
+      @machine.load_program_into_memory("B1", [ '3A06', '14E2', 'C000' ])
+      @machine.start_program "B1"
+    end
+
+    it "should initialise the program counter to the correct memory address" do
+      @machine.program_counter.should eql("B1")
+    end
+
+  end
+
+  describe "when performing a machine cycle" do
+
+    before(:each) do
+      @machine = Bolverk::Emulator.new
+      @machine.load_program_into_memory("B1", [ '3A06', '14E2', 'C000' ])
+      @machine.start_program "B1"
+    end
+
+    it "should raise exception if program has not been started"
+
+    it "should read instruction into the instruction register"
+
+    it "should increment the program counter two places"
+
+    it "should execute correct operation according to op code"
+
+    it "should raise exception if op code doesn't exist"
   end
 
 end

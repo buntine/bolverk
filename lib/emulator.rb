@@ -24,14 +24,33 @@ class Bolverk::Emulator
     @registers = [ "00000000" ] * 16
   end
 
+  def start_program(memory_cell)
+    @program_counter = memory_cell
+  end
+
+  def perform_machine_cycle
+    raise Bolverk::NullProgramCounterError if @program_counter.nil?
+
+    cell = @program_counter
+    @instruction_register = @main_memory[cell, 2].join
+
+    increment_program_counter
+
+    if @operation_codes.include? @instruction_register[0..3]
+      operation = @operation_codes[@instruction_register[0..3]]
+      operation.execute(self)
+    else
+      raise Bolverk::UnknownOpCodeError, "Unknown operation code: #{@instruction_register[0..3]}"
+    end
+  end
+
   # Programs should be written in binary or hexadecimal.
   # A program must be passed in as an array of individual
   # instructions.
-  def load_program_into_memory(program=[])
+  def load_program_into_memory(memory_cell, program=[])
     program.each_with_index do |instruction, index|
       binary = convert_from_hex_to_binary(instruction)
-      cell = index * 2
-
+      cell = memory_cell.hex + (index * 2)
       insert_instruction_into_memory(binary, cell)
     end
   end
@@ -60,19 +79,19 @@ class Bolverk::Emulator
     @main_memory[cell]
   end
 
-  private
+ private
 
-    # Returns an n-bit string. Smaller values are padded
-    # with zeros.
-    def convert_from_hex_to_binary(data="", size=16)
-      data.hex.to_s(base=2).rjust(size, "0")
-    end
+  # Returns an n-bit string. Smaller values are padded
+  # with zeros.
+  def convert_from_hex_to_binary(data="", size=16)
+    data.hex.to_s(base=2).rjust(size, "0")
+  end
 
-    # Each instruction requires two cells of main memory, so
-    # we snap the argument into byte-size chunks.
-    def insert_instruction_into_memory(instruction, cell=0)
-      @main_memory[cell] = instruction[0..7]
-      @main_memory[cell + 1] = instruction[8..15]
-    end
+  # Each instruction requires two cells of main memory, so
+  # we snap the argument into byte-size chunks.
+  def insert_instruction_into_memory(instruction, cell=0)
+    @main_memory[cell] = instruction[0..7]
+    @main_memory[cell + 1] = instruction[8..15]
+  end
 
 end
