@@ -189,15 +189,34 @@ describe Bolverk::Emulator do
       @machine.start_program "B1"
     end
 
-    it "should raise exception if program has not been started"
+    it "should read instruction into the instruction register" do
+      # NOTE: We expect the first program instruction to be read into the instruction register: 3A06
+      @machine.perform_machine_cycle
+      @machine.instruction_register.should eql('0011101000000110')
+    end
 
-    it "should read instruction into the instruction register"
-
-    it "should increment the program counter two places"
+    it "should increment the program counter two places" do
+      @machine.program_counter.should eql("B1")
+      @machine.perform_machine_cycle
+      @machine.program_counter.should eql("B3")
+    end
 
     it "should execute correct operation according to op code"
 
-    it "should raise exception if op code doesn't exist"
+    it "should raise exception if program has not been started" do
+      @machine = Bolverk::Emulator.new
+      lambda { @machine.perform_machine_cycle }.should raise_error(Bolverk::NullProgramCounterError)
+    end
+
+    it "should raise exception if op code doesn't exist" do
+      # NOTE: There is no operation for F (15), hence the exception.
+
+      @machine = Bolverk::Emulator.new
+      @machine.load_program_into_memory("A1", [ 'FA06', 'F4E2', 'C000' ])
+      @machine.start_program "A1"
+
+      lambda { @machine.perform_machine_cycle }.should raise_error(Bolverk::UnknownOpCodeError)
+    end
   end
 
 end

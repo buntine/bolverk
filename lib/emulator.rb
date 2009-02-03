@@ -2,7 +2,7 @@ class Bolverk::Emulator
   attr_reader :main_memory, :registers, :program_counter, :instruction_register
 
   # Class-mapping for instruction codes.
-  @operation_codes = {
+  @@operation_codes = { }
 #    "0001" => Bolverk::Operations::LoadFromMemory,
 #    "0010" => Bolverk::Operations::LoadFromValue,
 #    "0011" => Bolverk::Operations::Store,
@@ -17,11 +17,11 @@ class Bolverk::Emulator
 #    "1100" => Bolverk::Operations::Beep,
 #    "1101" => Bolverk::Operations::Print,
 #    "1110" => Bolverk::Operations::Halt,
-  }
+#  }
 
   def initialize
-    @main_memory = [ "00000000" ] * 256 
-    @registers = [ "00000000" ] * 16
+    @main_memory = [ "0" * 8 ] * 256 
+    @registers = [ "0" * 8 ] * 16
   end
 
   def start_program(memory_cell)
@@ -31,13 +31,11 @@ class Bolverk::Emulator
   def perform_machine_cycle
     raise Bolverk::NullProgramCounterError if @program_counter.nil?
 
-    cell = @program_counter
-    @instruction_register = @main_memory[cell, 2].join
-
+    update_instruction_register
     increment_program_counter
 
-    if @operation_codes.include? @instruction_register[0..3]
-      operation = @operation_codes[@instruction_register[0..3]]
+    if @@operation_codes.include? @instruction_register[0..3]
+      operation = @@operation_codes[@instruction_register[0..3]]
       operation.execute(self)
     else
       raise Bolverk::UnknownOpCodeError, "Unknown operation code: #{@instruction_register[0..3]}"
@@ -92,6 +90,18 @@ class Bolverk::Emulator
   def insert_instruction_into_memory(instruction, cell=0)
     @main_memory[cell] = instruction[0..7]
     @main_memory[cell + 1] = instruction[8..15]
+  end
+
+  def update_instruction_register
+    # Fetch the next instruction and store it in the instruction register.
+    cell = @program_counter.hex
+    @instruction_register = @main_memory[cell, 2].join
+  end
+
+  # Increments the program counter by two places (each instruction requires two memory cells).
+  def increment_program_counter
+    counter = @program_counter.hex + 2
+    @program_counter = counter.to_s(base=16).upcase
   end
 
 end
