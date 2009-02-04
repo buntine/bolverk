@@ -1,23 +1,7 @@
 class Bolverk::Emulator
-  attr_reader :main_memory, :registers, :program_counter, :instruction_register
+  include Bolverk::Operations
 
-  # Class-mapping for instruction codes.
-  @@operation_codes = { }
-#    "0001" => Bolverk::Operations::LoadFromMemory,
-#    "0010" => Bolverk::Operations::LoadFromValue,
-#    "0011" => Bolverk::Operations::Store,
-#    "0100" => Bolverk::Operations::Move,
-#    "0101" => Bolverk::Operations::AddBinary,
-#    "0110" => Bolverk::Operations::AddFloatingPoint,
-#    "0111" => Bolverk::Operations::Or,
-#    "1000" => Bolverk::Operations::And,
-#    "1001" => Bolverk::Operations::Xor,
-#    "1010" => Bolverk::Operations::Rotate,
-#    "1011" => Bolverk::Operations::Jump,
-#    "1100" => Bolverk::Operations::Beep,
-#    "1101" => Bolverk::Operations::Print,
-#    "1110" => Bolverk::Operations::Halt,
-#  }
+  attr_reader :main_memory, :registers, :program_counter, :instruction_register
 
   def initialize
     @main_memory = [ "0" * 8 ] * 256 
@@ -34,9 +18,11 @@ class Bolverk::Emulator
     update_instruction_register
     increment_program_counter
 
-    if @@operation_codes.include? @instruction_register[0..3]
-      operation = @@operation_codes[@instruction_register[0..3]]
-      operation.execute(self)
+    circuitry = handler_for_op_code(@instruction_register[0..3])
+
+    unless circuitry.nil?
+      handler = circuitry.new(self)
+      handler.execute
     else
       raise Bolverk::UnknownOpCodeError, "Unknown operation code: #{@instruction_register[0..3]}"
     end
@@ -61,8 +47,6 @@ class Bolverk::Emulator
     @main_memory[cell] = convert_from_hex_to_binary(data, 8)
   end
 
-  # Loads an array of hexadecimal values into main memory, starting
-  # at memory address specified by memory_cell.
   def load_values_into_memory(memory_cell, data=[])
     data.each_with_index do |code, index|
       cell = memory_cell.hex + index

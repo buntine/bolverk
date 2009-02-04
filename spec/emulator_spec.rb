@@ -185,14 +185,14 @@ describe Bolverk::Emulator do
 
     before(:each) do
       @machine = Bolverk::Emulator.new
-      @machine.load_program_into_memory("B1", [ '3A06', '14E2', 'C000' ])
+      @machine.load_program_into_memory("B1", [ '1A06', '14E2', 'C000' ])
       @machine.start_program "B1"
     end
 
     it "should read instruction into the instruction register" do
-      # NOTE: We expect the first program instruction to be read into the instruction register: 3A06
+      # NOTE: We expect the first program instruction to be read into the instruction register: 1A06
       @machine.perform_machine_cycle
-      @machine.instruction_register.should eql('0011101000000110')
+      @machine.instruction_register.should eql('0001101000000110')
     end
 
     it "should increment the program counter two places" do
