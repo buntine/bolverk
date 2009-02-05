@@ -19,7 +19,7 @@ class Bolverk::Operations::Base
     EOF
   end
 
-  # Default to prevfent NoMethodError.
+  # Default to prevent NoMethodError.
   def self.op_code
     nil
   end

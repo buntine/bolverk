@@ -34,7 +34,7 @@ class Bolverk::Emulator
   # instructions.
   def load_program_into_memory(memory_cell, program=[])
     program.each_with_index do |instruction, index|
-      binary = convert_from_hex_to_binary(instruction)
+      binary = convert_hex_to_binary(instruction)
       cell = memory_cell.hex + (index * 2)
       insert_instruction_into_memory(binary, cell)
     end
@@ -45,7 +45,7 @@ class Bolverk::Emulator
   # in as hexadecimal.
   def load_value_into_memory(memory_cell, data="00")
     cell = memory_cell.hex
-    @main_memory[cell] = convert_from_hex_to_binary(data, 8)
+    @main_memory[cell] = convert_hex_to_binary(data, 8)
   end
 
   def load_values_into_memory(memory_cell, data=[])
@@ -62,12 +62,28 @@ class Bolverk::Emulator
     @main_memory[cell]
   end
 
+  # Stores a value into a register, identified by the first operand.
+  def store_value_in_register(register, value)
+    register = convert_binary_to_hex(register) if is_binary_data?(register)
+
+    @registers[register.hex] = value
+  end
+
  private
 
   # Returns an n-bit string. Smaller values are padded
   # with zeros.
-  def convert_from_hex_to_binary(data="", size=16)
+  def convert_hex_to_binary(data="", size=16)
     data.hex.to_s(base=2).rjust(size, "0")
+  end
+
+  def convert_binary_to_hex(data="")
+    decimal = [("0"*32+data.to_s)[-32..-1]].pack("B32").unpack("N")[0]
+    decimal.to_s(base=16).upcase
+  end
+
+  def is_binary_data?(data)
+    data =~ /^[01]+$/
   end
 
   # Each instruction requires two cells of main memory, so

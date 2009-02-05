@@ -1,3 +1,6 @@
+
+# A helper class to provide a cleaner interface to the emulator and it's operation classes.
+# This is more-or-less a wrapper around a 16-bit binary string.
 class Bolverk::InstructionRegister
   attr_reader :instruction
 
