@@ -3,11 +3,11 @@ require File.dirname(__FILE__) + "/spec_helper"
 describe Bolverk::InstructionRegister do
 
   before do
-    @instruction_register = Bolverk::InstructionRegister.new "1111000011110000"
+    @instruction_register = Bolverk::InstructionRegister.new "1111000011000011"
   end
 
   it "should store reader for instruction" do
-    @instruction_register.instruction.should eql("1111000011110000")
+    @instruction_register.instruction.should eql("1111000011000011")
   end
 
   it "should be able to return operation code (first 4 bits)" do
@@ -19,11 +19,11 @@ describe Bolverk::InstructionRegister do
   end
 
   it "should be able to return the second operand (third 4 bits)" do
-    @instruction_register.operand(2).should eql("1111")
+    @instruction_register.operand(2).should eql("1100")
   end
 
   it "should be able to return the third operand (fourth 4 bits)" do
-    @instruction_register.operand(3).should eql("0000")
+    @instruction_register.operand(3).should eql("0011")
   end
 
   it "should return the operation code (first 4 bits) by default" do
