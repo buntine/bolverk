@@ -8,11 +8,13 @@ class Bolverk::Emulator
     @registers = [ "0" * 8 ] * 16
   end
 
+  # Initializes the program counter to the given memory cell.
   def start_program(memory_cell)
     @program_counter = memory_cell
     @instruction_register = Bolverk::InstructionRegister.new
   end
 
+  # Executes a single program instruction.
   def perform_machine_cycle
     raise Bolverk::NullProgramCounterError if @program_counter.nil?
 
@@ -21,6 +23,7 @@ class Bolverk::Emulator
 
     circuitry = handler_for_op_code(@instruction_register.op_code)
 
+    # Execute the correct operation.
     unless circuitry.nil?
       handler = circuitry.new(self)
       handler.execute
