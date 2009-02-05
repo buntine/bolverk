@@ -26,8 +26,8 @@ describe Bolverk::InstructionRegister do
     @instruction_register.operand(3).should eql("0000")
   end
 
-  it "should return the first operand by default" do
-    @instruction_register.operand.should eql("0000")
+  it "should return the operation code (first 4 bits) by default" do
+    @instruction_register.operand.should eql("1111")
   end
 
   it "should be able to update the instruction" do

@@ -78,6 +78,7 @@ class Bolverk::Emulator
     data.hex.to_s(base=2).rjust(size, "0")
   end
 
+  # Sourced from: http://pleac.sourceforge.net/pleac_ruby/numbers.html
   def convert_binary_to_hex(data="")
     decimal = [("0"*32+data.to_s)[-32..-1]].pack("B32").unpack("N")[0]
     decimal.to_s(base=16).upcase
@@ -94,8 +95,8 @@ class Bolverk::Emulator
     @main_memory[cell + 1] = instruction[8..15]
   end
 
+  # Fetches the next program instruction and store it in the instruction register.
   def update_instruction_register
-    # Fetch the next instruction and store it in the instruction register.
     cell = @program_counter.hex
     @instruction_register.update_with @main_memory[cell, 2].join
   end
