@@ -63,10 +63,11 @@ class Bolverk::Emulator
   end
 
   # Stores a value into a register, identified by the first operand.
-  def store_value_in_register(register, value)
+  def store_memory_address_in_register(register, memory_cell)
     register = convert_binary_to_hex(register) if is_binary_data?(register)
+    memory_cell = convert_binary_to_hex(memory_cell) if is_binary_data?(memory_cell)
 
-    @registers[register.hex] = value
+    @registers[register.hex] = @main_memory[memory_cell.hex]
   end
 
  private
