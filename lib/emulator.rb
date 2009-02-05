@@ -10,6 +10,7 @@ class Bolverk::Emulator
 
   def start_program(memory_cell)
     @program_counter = memory_cell
+    @instruction_register = Bolverk::InstructionRegister.new
   end
 
   def perform_machine_cycle
@@ -18,13 +19,13 @@ class Bolverk::Emulator
     update_instruction_register
     increment_program_counter
 
-    circuitry = handler_for_op_code(@instruction_register[0..3])
+    circuitry = handler_for_op_code(@instruction_register.op_code)
 
     unless circuitry.nil?
       handler = circuitry.new(self)
       handler.execute
     else
-      raise Bolverk::UnknownOpCodeError, "Unknown operation code: #{@instruction_register[0..3]}"
+      raise Bolverk::UnknownOpCodeError, "Unknown operation code: #{@instruction_register.op_code}"
     end
   end
 
@@ -79,7 +80,7 @@ class Bolverk::Emulator
   def update_instruction_register
     # Fetch the next instruction and store it in the instruction register.
     cell = @program_counter.hex
-    @instruction_register = @main_memory[cell, 2].join
+    @instruction_register.update_with @main_memory[cell, 2].join
   end
 
   # Increments the program counter by two places (each instruction requires two memory cells).

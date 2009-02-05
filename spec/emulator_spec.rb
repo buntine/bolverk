@@ -192,7 +192,9 @@ describe Bolverk::Emulator do
     it "should read instruction into the instruction register" do
       # NOTE: We expect the first program instruction to be read into the instruction register: 1A06
       @machine.perform_machine_cycle
-      @machine.instruction_register.should eql('0001101000000110')
+
+      @machine.instruction_register.instruction.should eql('0001101000000110')
+      @machine.instruction_register.op_code.should eql('0001')
     end
 
     it "should increment the program counter two places" do

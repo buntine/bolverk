@@ -6,4 +6,8 @@ describe Bolverk::Operations::LoadFromMemory do
     Bolverk::Operations::LoadFromMemory.op_code.should match(/^[01]{4}$/)
   end
 
+  describe "when executing operation" do
+
+  end
+
 end
