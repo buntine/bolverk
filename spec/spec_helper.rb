@@ -1,2 +1,2 @@
 require 'spec'
-require File.dirname(__FILE__) + '/../bolverk'
+require File.dirname(__FILE__) + '/../lib/bolverk'
