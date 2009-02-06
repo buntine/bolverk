@@ -38,7 +38,7 @@ class Bolverk::Emulator
   def load_program_into_memory(memory_cell, program=[])
     program.each_with_index do |instruction, index|
       cell = memory_cell.hex + (index * 2)
-      insert_instruction_into_memory(instruction.hex_to_binary, cell)
+      insert_instruction_into_memory(instruction, cell)
     end
   end
 
@@ -46,8 +46,7 @@ class Bolverk::Emulator
   # by memory_cell. Values and memory addresses should be passed
   # in as hexadecimal.
   def load_value_into_memory(memory_cell, data="00")
-    cell = memory_cell.hex
-    @main_memory[cell] = data.hex_to_binary(8)
+    @main_memory.write(memory_cell, data.hex_to_binary(8))
   end
 
   def load_values_into_memory(memory_cell, data=[])
@@ -60,32 +59,23 @@ class Bolverk::Emulator
 
   # Returns the value of memory cell identified by memory_cell.
   def fetch_value_from_memory(memory_cell)
-    cell = memory_cell.hex
-    @main_memory[cell]
+    @main_memory.read(memory_cell)
   end
 
   # Stores the value at a memory address into a register, identified by the first operand.
   def store_memory_address_in_register(register, memory_cell)
-    register.binary_to_hex! if register.is_bitstring?
-    memory_cell.binary_to_hex! if memory_cell.is_bitstring?
-
-    @registers[register.hex] = @main_memory[memory_cell.hex]
+    @registers.write(register, @main_memory.read(memory_cell))
   end
 
   # Stores a value into a register, identified by the first operand.
   def store_value_in_register(register, value)
-    register.binary_to_hex! if register.is_bitstring?
     value.hex_to_binary!(8) unless value.is_bitstring?
-
-    @registers[register.hex] = value
+    @registers.write(register, value)
   end
 
   # Stores the value at a register into a memory_address.
   def store_register_in_memory_address(register, memory_cell)
-    register.binary_to_hex! if register.is_bitstring?
-    memory_cell.binary_to_hex! if memory_cell.is_bitstring?
-
-    @main_memory[memory_cell.hex] = @registers[register.hex]
+    @main_memory.write(memory_cell, @registers.read(register))
   end
 
  private
@@ -93,6 +83,7 @@ class Bolverk::Emulator
   # Each instruction requires two cells of main memory, so
   # we snap the argument into byte-size chunks.
   def insert_instruction_into_memory(instruction, cell=0)
+    instruction.hex_to_binary!
     @main_memory[cell] = instruction[0..7]
     @main_memory[cell + 1] = instruction[8..15]
   end

@@ -1,10 +1,13 @@
 class Array
 
-  alias_method :old_index_get, :[]
-  alias_method :old_index_set, :[]=
+  def write(index, data)
+    index.binary_to_hex! if index.is_bitstring?
+    self[index.hex] = data
+  end
 
-#  def [] index
-#    if index.
-#  end
+  def read(index)
+    index.binary_to_hex! if index.is_bitstring?
+    self[index.hex]
+  end
 
 end
