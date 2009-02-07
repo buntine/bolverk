@@ -11,7 +11,7 @@ describe Bolverk::Operations::LoadFromMemory do
     before do
       @machine = Bolverk::Emulator.new
 
-      @machine.load_value_into_memory("06", "55")
+      @machine.memory_write("06", "55")
       @machine.load_program_into_memory("B1", [ '1A06', 'C000' ])
       @machine.start_program "B1"
     end

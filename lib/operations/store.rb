@@ -16,7 +16,7 @@ class Bolverk::Operations::Store < Bolverk::Operations::Base
     register = instruction.operand(1)
     memory_cell = instruction.operand(2) + instruction.operand(3)
 
-    @emulator.store_register_in_memory_address(register, memory_cell)
+    @emulator.memory_write(memory_cell, @emulator.register_read(register))
   end
 
 end

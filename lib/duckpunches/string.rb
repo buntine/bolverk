@@ -2,7 +2,7 @@ class String
 
   def is_bitstring?
     # A little stupid, but I want these to return a boolean over 0/nil.
-    !(self =~ /^[01]+$/).nil?
+    !(self =~ /^[01]{4,}$/).nil?
   end
 
   def is_hexadecimal?

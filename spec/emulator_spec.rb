@@ -4,6 +4,7 @@ describe Bolverk::Emulator do
 
   before do
     @null_memory = [ "0" * 8 ] * 256
+    @null_registers = [ "0" * 8 ] * 16
   end
 
   describe "when instantiating" do
@@ -84,7 +85,7 @@ describe Bolverk::Emulator do
 
     before(:all) do
       @machine = Bolverk::Emulator.new
-      @machine.load_value_into_memory("A3", "BB")
+      @machine.memory_write("A3", "BB")
     end
 
     it "should modify main memory" do
@@ -150,20 +151,70 @@ describe Bolverk::Emulator do
 
     before(:all) do
       @machine = Bolverk::Emulator.new
-      @machine.load_value_into_memory("A3", "B6")
+      @machine.memory_write("A3", "B6")
     end
 
     it "should return the correct value" do
       # B6 is 10110110 in binary.
-
-      @machine.fetch_value_from_memory("A3").should eql("10110110")
+      @machine.memory_read("A3").should eql("10110110")
     end
 
     it "should return all zeroes from empty cell" do
-      @machine.fetch_value_from_memory("13").should eql("00000000")
+      @machine.memory_read("13").should eql("00000000")
     end
 
     it "should raise exception if the memory cell does not exist"
+
+  end
+
+  describe "when fetching a value from a register" do
+
+    before(:all) do
+      @machine = Bolverk::Emulator.new
+      @machine.register_write("A", "B7")
+    end
+
+    it "should return the correct value" do
+      # B6 is 10110111 in binary.
+      @machine.register_read("A").should eql("10110111")
+    end
+
+    it "should return all zeroes from empty register" do
+      @machine.register_read("1").should eql("00000000")
+      @machine.register_read("2").should eql("00000000")
+    end
+
+    it "should raise exception if the register does not exist"
+
+  end
+
+  describe "when loading a value into  a register" do
+
+    before(:all) do
+      @machine = Bolverk::Emulator.new
+      @machine.register_write("3", "BB")
+    end
+
+    it "should modify a register" do
+      @machine.registers.should_not eql(@null_registers)
+    end
+
+    it "should only store binary data in registers" do
+      @machine.registers.each do |cell|
+        cell.should match(/[0-1]{8}/)
+      end
+    end
+
+    it "should store the correct data in the correct location" do
+      @machine.registers[3].should eql("10111011")
+    end
+
+    it "should leave the rest of the registers alone" do
+      @machine.registers[0..2].should eql([ "0" * 8 ] * 3)
+      @machine.registers[4..15].should eql([ "0" * 8 ] * 12)
+    end
+
+    it "should raise exception if register location does not exist"
 
   end
 

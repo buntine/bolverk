@@ -16,7 +16,7 @@ class Bolverk::Operations::LoadFromValue < Bolverk::Operations::Base
     register = instruction.operand(1)
     value = instruction.operand(2) + instruction.operand(3)
 
-    @emulator.store_value_in_register(register, value)
+    @emulator.register_write(register, value)
   end
 
 end

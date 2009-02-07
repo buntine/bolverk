@@ -10,7 +10,7 @@ describe Bolverk::Operations::Store do
 
     before do
       @machine = Bolverk::Emulator.new
-      @machine.store_value_in_register("A", "55")
+      @machine.register_write("A", "55")
 
       @machine.load_program_into_memory("B1", [ '3AB9', 'C000' ])
       @machine.start_program "B1"

@@ -14,9 +14,9 @@ class Bolverk::Operations::LoadFromMemory < Bolverk::Operations::Base
     instruction = @emulator.instruction_register
 
     register = instruction.operand(1)
-    memory_cell = instruction.operand(2) + instruction.operand(3)
+    cell = instruction.operand(2) + instruction.operand(3)
 
-    @emulator.store_memory_address_in_register(register, memory_cell)
+    @emulator.register_write(register, @emulator.memory_read(cell))
   end
 
 end

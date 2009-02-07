@@ -42,40 +42,30 @@ class Bolverk::Emulator
     end
   end
 
-  # Loads a single value into memory at memory location specified
-  # by memory_cell. Values and memory addresses should be passed
-  # in as hexadecimal.
-  def load_value_into_memory(memory_cell, data="00")
-    @main_memory.write(memory_cell, data.hex_to_binary(8))
-  end
-
   def load_values_into_memory(memory_cell, data=[])
     data.each_with_index do |code, index|
       cell = memory_cell.hex + index
       cell = cell.to_s(base=16)
-      load_value_into_memory(cell, code)
+      memory_write(cell, code)
     end
   end
-
-  # Returns the value of memory cell identified by memory_cell.
-  def fetch_value_from_memory(memory_cell)
-    @main_memory.read(memory_cell)
+  
+  def memory_read(cell)
+    @main_memory.read(cell)
   end
 
-  # Stores the value at a memory address into a register, identified by the first operand.
-  def store_memory_address_in_register(register, memory_cell)
-    @registers.write(register, @main_memory.read(memory_cell))
-  end
-
-  # Stores a value into a register, identified by the first operand.
-  def store_value_in_register(register, value)
+  def memory_write(cell, value="00")
     value.hex_to_binary!(8) unless value.is_bitstring?
-    @registers.write(register, value)
+    @main_memory.write(cell, value)
   end
 
-  # Stores the value at a register into a memory_address.
-  def store_register_in_memory_address(register, memory_cell)
-    @main_memory.write(memory_cell, @registers.read(register))
+  def register_read(cell)
+    @registers.read(cell)
+  end
+
+  def register_write(cell, value="00")
+    value.hex_to_binary!(8) unless value.is_bitstring?
+    @registers.write(cell, value)
   end
 
  private
@@ -83,7 +73,7 @@ class Bolverk::Emulator
   # Each instruction requires two cells of main memory, so
   # we snap the argument into byte-size chunks.
   def insert_instruction_into_memory(instruction, cell=0)
-    instruction.hex_to_binary!
+    instruction.hex_to_binary! unless instruction.is_bitstring?
     @main_memory[cell] = instruction[0..7]
     @main_memory[cell + 1] = instruction[8..15]
   end
