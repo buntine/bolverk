@@ -18,6 +18,51 @@ describe String do
     "Total War".is_hexadecimal?.should be_false
   end
 
+  it "should be able to complement a bitstring" do
+    data ="001101"
+    data.complement!
+    data.should eql("110010")
+  end
+
+  it "should raise exception is data to complement is not valid" do
+    data = "balls to the walls"
+    lambda { data.complement! }.should raise_error(RuntimeError)
+  end
+
+  it "should be able to increment a binary value" do
+    # 13 to 14
+    data = "00001101"
+    data.increment!
+    data.should eql("00001110")
+
+    # 100 to 101
+    data = "01100100"
+    data.increment!
+    data.should eql("01100101")
+  end
+
+  it "should raise exception if overflow occurs when incrementing"
+
+  it "should raise exception if data is invalid when incrementing" do
+    data = "balls to the walls"
+    lambda { data.increment! }.should raise_error(RuntimeError)
+  end
+
+  it "should be able to convert from binary to decimal" do
+    # 50
+    data = "00110010"
+    data.binary_to_decimal.should eql(50)
+
+    # 105
+    data = "01101001"
+    data.binary_to_decimal.should eql(105)
+  end
+
+  it "should raise exception when converting to decimal if data is not valid" do
+    data = "balls to the walls"
+    lambda { data.binary_to_decimal }.should raise_error(RuntimeError)
+  end
+
   it "should be able to convert from binary to hexadecimal"
   it "should raise exception if string value is not binary"
 
@@ -26,4 +71,3 @@ describe String do
   it "should raise exception if string value is not hexadecimal"
 
 end
-
