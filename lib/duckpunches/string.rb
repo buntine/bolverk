@@ -14,8 +14,8 @@ class String
     raise RuntimeError, "Data is not valid Binary: #{self}" unless self.is_bitstring?
     complement = ""
 
-    self.each_char do |char|
-      complement << ((char == "0") ? "1" : "0")
+    self.each_byte do |char|
+      complement << ((char.chr == "0") ? "1" : "0")
     end
 
     self.replace(complement)
