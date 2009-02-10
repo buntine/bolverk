@@ -22,11 +22,11 @@ class String
   end
 
   # Increments a bit string: 00101 becomes 00110.
-  def increment!
+  def increment!(amount=1)
     raise RuntimeError, "Data is not valid Binary: #{self}" unless self.is_bitstring?
 
     size = self.length
-    decimal = self.binary_to_decimal + 1
+    decimal = self.binary_to_decimal + amount
     self.replace(decimal.to_s(base=2).rjust(size, "0"))
   end
 
