@@ -58,6 +58,12 @@ describe String do
     data.binary_to_decimal.should eql(105)
   end
 
+  it "should be able to convert binary to decimal with an excess notation" do
+    # 1 in excess-four notation
+    data = "0101"
+    data.binary_to_decimal(4).should eql(1)
+  end
+
   it "should raise exception when converting to decimal if data is not valid" do
     data = "balls to the walls"
     lambda { data.binary_to_decimal }.should raise_error(RuntimeError)
