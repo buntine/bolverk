@@ -31,9 +31,9 @@ class Bolverk::Operations::FloatingPointAdd < Bolverk::Operations::Base
   # Reads in a binary string that is stored in floating-point
   # notation and transforms it into a float.
   def decode_floating_point(bitstring)
-    mantissa = bitstring[4..7]
+    sign_bit = bitstring[0..0]
     exponent = bitstring[1..3]
-    sign_bit = bitstring[0,1]
+    mantissa = bitstring[4..7]
 
     # Read in the exponent using excess-four.
     radix_point = exponent.binary_to_decimal(4)
@@ -59,15 +59,19 @@ class Bolverk::Operations::FloatingPointAdd < Bolverk::Operations::Base
   # for storage in floating-point notation.
   def encode_floating_point(float)
     whole = float.to_i
-    fraction = fractional_decimal_to_binary(float - whole)
+    fraction = fractional_decimal_to_binary(float % 1)
 
     if whole == 0
+      # Store an exponent that lets the decoded know which direction the
+      # radix point needs to move in relative to the mantissa.
       if fraction.length > 4
         exponent = (4 - (fraction.length - 4)).to_s(base=2).rjust(3, "0")
       else
+        # 0 in excess-four. The radix point does not move.
         exponent = "100"
       end
     else
+      # Store the position of the radix in excess-four.
       exponent = (whole.to_s(base=2).length + 4).to_s(base=2)
     end
 
@@ -75,19 +79,6 @@ class Bolverk::Operations::FloatingPointAdd < Bolverk::Operations::Base
     whole = (whole > 0) ? whole.to_s(base=2) : ""
     mantissa = whole + fraction
     sign_bit = (float < 0) ? "1" : "0"
-
-    # Grab the whole: float.to_i
-    # fraction = float.fraction.to_binary
-    # if whole is 0
-      # if fraction.length > 4
-        # exponent = (4 - (fraction.length - 4)).to_binary.rjust(3, "0")
-      # else
-        # exponent = 100
-    # else
-      # exponent = whole.to_binary.length + 4.to_binary
-    # mantissa = whole.to_binary + fraction.last_4_bits_or_less
-    # sign_bit = (float < 0) ? "1" : "0"
-    # sign_bit + exponent + mantissa (ljust this to 8, pad with 0's)
 
     (sign_bit + exponent + mantissa).ljust(8, "0")
   end
@@ -98,6 +89,9 @@ class Bolverk::Operations::FloatingPointAdd < Bolverk::Operations::Base
     fraction = 0.0
     precision = 2
 
+    # Traverse the bitstring, each time adding
+    # the fractional portion to our total and raising
+    # the precision to the next power.
     bitstring.each_byte do |bit|
       fraction += bit.chr.to_f / precision
       precision *= 2
@@ -112,11 +106,13 @@ class Bolverk::Operations::FloatingPointAdd < Bolverk::Operations::Base
     bitstring = ""
     fraction = float
     
+    # Double the fractional portion continuously until we get a whole
+    # or reach our desired limit. Each time, the whole will
+    # be either 1 or 0 (which is used to build the bitstring).
     while !fraction.zero? and bitstring.length < 8 do
       fraction *= 2
-      whole = fraction.to_i
-      bitstring << whole.to_s
-      fraction -= whole
+      bitstring << fraction.floor.to_s
+      fraction %= 1
     end
 
     bitstring
