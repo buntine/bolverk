@@ -41,3 +41,6 @@
     1)    Sign bit.
     2..4) Exponent field, encoded in Excess Four Notation
     5..8) Mantissa field
+
+  It's worth noting that my Floating Point implemenation is very limited as only one byte is reserved per number. Therefore,
+  round-off errors and overflows are going to be rather common unless you are dealing with a very small range of numbers (1/256 to 7 1/2).
