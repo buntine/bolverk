@@ -1,3 +1,5 @@
+# TODO: This class contains some pretty messy code. It needs a cleanup.
+
 class Bolverk::Operations::FloatingPointAdd < Bolverk::Operations::Base
 
   map_to "0110"
@@ -75,7 +77,7 @@ class Bolverk::Operations::FloatingPointAdd < Bolverk::Operations::Base
       exponent = (whole.to_s(base=2).length + 4).to_s(base=2)
     end
 
-    fraction = (fraction.length > 4) ? fraction[-4, 4] : fraction
+    fraction = fraction[-4, 4] || fraction
     whole = (whole > 0) ? whole.to_s(base=2) : ""
     mantissa = whole + fraction
     sign_bit = (float < 0) ? "1" : "0"
