@@ -77,9 +77,8 @@ class Bolverk::Operations::FloatingPointAdd < Bolverk::Operations::Base
       exponent = (whole.to_s(base=2).length + 4).to_s(base=2)
     end
 
-    fraction = fraction[-4, 4] || fraction
-    whole = (whole > 0) ? whole.to_s(base=2) : ""
-    mantissa = whole + fraction
+    mantissa = (whole > 0) ? whole.to_s(base=2) : ""
+    mantissa << (fraction[-4, 4] || fraction)
     sign_bit = (float < 0) ? "1" : "0"
 
     (sign_bit + exponent + mantissa).ljust(8, "0")
