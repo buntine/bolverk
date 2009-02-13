@@ -3,6 +3,8 @@ class Bolverk::Operations::Base
 
   def initialize(emulator)
     @emulator = emulator
+
+    setup_instruction_parameters
   end
 
   # Helper method to map operations to bit-strings.
@@ -19,9 +21,31 @@ class Bolverk::Operations::Base
     EOF
   end
 
-  # Default to prevent NoMethodError.
-  def self.op_code
-    nil
+  # Helper method to setup instance variables for instruction
+  # parameters.
+  def self.parameter_layout(layout)
+    self.class_eval <<-EOF
+      def self.layout
+        layout
+      end
+    EOF
+ 
+  end
+
+  # Defaults to prevent NoMethodError.
+  def self.op_code; nil; end
+  def self.layout; [ [:parameter, 16] ]; end
+
+ private
+
+  def setup_instruction_parameters
+    instruction = @emulator.instruction_register
+
+    unless instruction.nil?
+      instance_variable_set(:@register_a, instruction.operand(1))
+      instance_variable_set(:@register_b, instruction.operand(2))
+      instance_variable_set(:@destination, instruction.operand(3))
+    end
   end
 
 end
