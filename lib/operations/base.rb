@@ -1,8 +1,6 @@
 class Bolverk::Operations::Base
   attr_reader :emulator
 
-#  @@layout = [ [:parameter, 16] ]
-
   def initialize(emulator)
     @emulator = emulator
 
