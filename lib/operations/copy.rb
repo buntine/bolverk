@@ -2,10 +2,8 @@ class Bolverk::Operations::Copy < Bolverk::Operations::Base
 
   map_to "0100"
 
-  # Operation layout:
-  #   xxxx | 0000 | xxxx | xxxx
-  #   op_code | unused | source | destination
-  #
+  parameter_layout [ [:ignore, 4], [:source, 4], [:destination, 4] ]
+
   # Copies the value stored in register "source" into register "destination".
   #
   # Example:
@@ -14,9 +12,7 @@ class Bolverk::Operations::Copy < Bolverk::Operations::Base
     instruction = @emulator.instruction_register
 
     source = instruction.operand(2)
-    destination = instruction.operand(3)
-
-    @emulator.register_write(destination, @emulator.register_read(source))
+    @emulator.register_write(@destination, @emulator.register_read(@source))
   end
 
 end

@@ -1,6 +1,8 @@
 class Bolverk::Operations::Base
   attr_reader :emulator
 
+#  @@layout = [ [:parameter, 16] ]
+
   def initialize(emulator)
     @emulator = emulator
 
@@ -25,26 +27,29 @@ class Bolverk::Operations::Base
   # parameters.
   def self.parameter_layout(layout)
     self.class_eval <<-EOF
-      def self.layout
-        layout
+      def layout
+        #{layout.inspect}
       end
     EOF
- 
   end
 
   # Defaults to prevent NoMethodError.
   def self.op_code; nil; end
-  def self.layout; [ [:parameter, 16] ]; end
+  def layout; [ [:parameter, 12] ]; end
 
  private
 
+  # This method will setup instance variables that are usable
+  # within subclasses from the execute method. It delegates
+  # bits from the instruction into variables to prevent boilerplate
+  # code in every operation subclass.
   def setup_instruction_parameters
     instruction = @emulator.instruction_register
-
     unless instruction.nil?
-      instance_variable_set(:@register_a, instruction.operand(1))
-      instance_variable_set(:@register_b, instruction.operand(2))
-      instance_variable_set(:@destination, instruction.operand(3))
+      layout.each do |param|
+        bits = instruction.read(param[1])
+        instance_variable_set("@#{param[0]}".intern, bits) unless param[0].eql?(:ignore)
+      end
     end
   end
 

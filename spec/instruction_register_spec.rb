@@ -10,6 +10,17 @@ describe Bolverk::InstructionRegister do
     @instruction_register.instruction.should eql("1111000011000011")
   end
 
+  it "should be able to read in some bits in succession" do
+    @instruction_register.read(4).should eql("0000")
+    @instruction_register.read(4).should eql("1100")
+    @instruction_register.read(4).should eql("0011")
+
+    @instruction_register.rewind # Back to the first operand.
+
+    @instruction_register.read(8).should eql("00001100")
+    @instruction_register.read(4).should eql("0011")
+  end
+
   it "should be able to return operation code (first 4 bits)" do
     @instruction_register.op_code.should eql("1111")
   end
