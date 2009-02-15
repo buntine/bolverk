@@ -4,8 +4,7 @@ class Bolverk::Operations::Or < Bolverk::Operations::Base
 
   parameter_layout [ [:register_a, 4], [:register_b, 4], [:destination, 4] ]
 
-  # Adds the values in register A and register B as if they were binary
-  # numbers and stores the result in register C.
+  # Performs an OR operation on register_a and register_b and stores the result in "destination".
   #
   # Example:
   #   725A => 0111001001011010=> OR the contents of registers 2 and 5 and store the result in register A.

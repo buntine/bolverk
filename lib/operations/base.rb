@@ -7,6 +7,10 @@ class Bolverk::Operations::Base
     setup_instruction_parameters
   end
 
+  def execute
+    raise RuntimeError, "You need to override the execute method in the subclass."
+  end
+
   # Helper method to map operations to bit-strings.
   # Example:
   #   class Bolverk::Operations::Badass < Bolverk::Operations::Base
@@ -44,6 +48,8 @@ class Bolverk::Operations::Base
   def setup_instruction_parameters
     instruction = @emulator.instruction_register
     unless instruction.nil?
+      instruction.rewind
+
       layout.each do |param|
         bits = instruction.read(param[1])
         instance_variable_set("@#{param[0]}".intern, bits) unless param[0].eql?(:ignore)

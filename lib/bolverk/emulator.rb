@@ -20,7 +20,6 @@ class Bolverk::Emulator
 
     update_instruction_register
     increment_program_counter
-
     circuitry = handler_for_op_code(@instruction_register.op_code)
 
     # Execute the correct operation.
