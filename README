@@ -7,21 +7,21 @@
 
   Bolverk is an emulator for a typical machine language. I have developed it in an attempt to
   better understand the way machines work at a low-level and potentially as an educational tool
-  for students who prefer to see a machine language is action.
+  for students who prefer to see a machine language in action in a virtual environment.
 
   With Bolverk, you can write a machine language program, and then step through the operation one
   "machine cycle" at time. At each point, you can dissect main memory and all registers. This is a
-  great way to see how the program effects memory.
+  great way to see how the program effects memory in realtime.
 
-  Programs are written in hexadecimal. The language design is based on the one described
+  Programs are written in base-16 (hexadecimal). The language design is based on the one described
   in J. Glenn Brookshears textbook -- Computer Science: An Overview (3rd edition, 1991).
 
 2) Architecture
 
   - The machine has 16 registers identified in hexadecimal as 0 through to F.
-  - Each register can hold 8 bits (one byte).
+  - Each register can hold one byte (8 bits).
   - Main memory consists of 256 cells.
-  - Each memory cell can hold 8 bits (one byte).
+  - Each memory cell can hold one byte.
   - Memory cells can be referenced in hexadecimal as 00 (00000000) to FF (11111111).
 
 3) Machine Language
@@ -32,9 +32,9 @@
 
 2) Storing Integers and Fractions
 
-  In order to handle negative values, the emulator will treat all stored integers as though they are
-  encoded in Two's Complement Notation. Therefore, the range of numbers than can be stored is -125 to 124.
-  This should be sufficient for educational purposes.
+  In order to handle negative values, the emulator stores integers as 8-bit and encoded in
+  Two's Complement Notation. Therefore, the range of numbers than can be stored is -125 to 124. This should
+  be sufficient for educational purposes.
 
   Fractions are stored in Floating Point Notation using the following layout: 0 000 0000
 
