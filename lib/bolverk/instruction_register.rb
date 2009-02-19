@@ -14,6 +14,7 @@ class Bolverk::InstructionRegister
   # Store a new instruction.
   def update_with(bitstring)
     @instruction = bitstring
+    rewind
   end
 
   # Return the operation code (first 4 bits).

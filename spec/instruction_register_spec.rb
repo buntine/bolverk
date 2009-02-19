@@ -48,4 +48,12 @@ describe Bolverk::InstructionRegister do
     @instruction_register.op_code.should eql("1000")
   end
 
+  it "should rewind the read position when the instruction is manually updated" do
+    @instruction_register.read(12) # Read the whole thing.
+
+    @instruction_register.update_with "1000111100111111"
+
+    @instruction_register.read(12).should eql("111100111111") # Now it's back to the beginning.
+  end
+
 end
