@@ -1,7 +1,8 @@
 class Bolverk::Emulator
   include Bolverk::Operations
 
-  attr_reader :main_memory, :registers, :program_counter, :instruction_register
+  attr_reader :main_memory, :registers, :instruction_register
+  attr_accessor :program_counter
 
   def initialize
     @main_memory = [ "0" * 8 ] * 256 
