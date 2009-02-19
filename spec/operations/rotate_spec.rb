@@ -13,7 +13,7 @@ describe Bolverk::Operations::Rotate do
       @machine.register_write("3", "5A")
       @machine.register_write("4", "59")
   
-      @machine.load_program_into_memory("B1", [ 'A202', 'A404', 'C000' ])
+      @machine.load_program_into_memory("B1", [ 'A302', 'A404', 'C000' ])
       @machine.start_program "B1"
     end
   
@@ -25,10 +25,10 @@ describe Bolverk::Operations::Rotate do
       @machine.perform_machine_cycle
 
       # NOTE: 5A ROTATE(2) = 10010110.
-      @machine.registers[3].should eql("10010110") # 5A
+      @machine.registers[3].should eql("10010110")
 
       # NOTE: 59 ROTATE(4) = 10010101.
-      @machine.registers[4].should eql("10010101") # 5A
+      @machine.registers[4].should eql("10010101")
     end
 
   end
