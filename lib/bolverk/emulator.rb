@@ -10,8 +10,8 @@ class Bolverk::Emulator
   end
 
   # Initializes the program counter to the given memory cell.
-  def start_program(memory_cell)
-    @program_counter = memory_cell
+  def start_program(cell)
+    @program_counter = cell
     @instruction_register = Bolverk::InstructionRegister.new
   end
 
@@ -35,40 +35,60 @@ class Bolverk::Emulator
   # Programs should be written in binary or hexadecimal.
   # A program must be passed in as an array of individual
   # instructions.
-  def load_program_into_memory(memory_cell, program=[])
+  def load_program_into_memory(cell, program=[])
+    raise Bolverk::InvalidMemoryAddress unless is_valid_memory_address?(cell) and !cell.upcase.eql?("FF")
+
     program.each_with_index do |instruction, index|
-      cell = memory_cell.hex + (index * 2)
-      insert_instruction_into_memory(instruction, cell)
+      memory_cell = cell.hex + (index * 2)
+      insert_instruction_into_memory(instruction, memory_cell)
     end
   end
 
-  def load_values_into_memory(memory_cell, data=[])
-    data.each_with_index do |code, index|
-      cell = memory_cell.hex + index
-      cell = cell.to_s(base=16)
-      memory_write(cell, code)
-    end
-  end
-  
   def memory_read(cell)
-    @main_memory.read(cell)
+    if is_valid_memory_address?(cell)
+      @main_memory.read(cell)
+    else
+      raise Bolverk::InvalidMemoryAddress, "No such memory address: #{cell}"
+    end
   end
 
   def memory_write(cell, value="00")
-    value.hex_to_binary!(8) unless value.is_bitstring?
-    @main_memory.write(cell, value)
+    if is_valid_memory_address?(cell)
+      value.hex_to_binary!(8) unless value.is_bitstring?
+      @main_memory.write(cell, value)
+    else
+      raise Bolverk::InvalidMemoryAddress, "No such memory address: #{cell}"
+    end
   end
 
   def register_read(cell)
-    @registers.read(cell)
+    if is_valid_register_address?(cell)
+      @registers.read(cell)
+    else
+      raise Bolverk::InvalidMemoryAddress, "No such register address: #{cell}"
+    end
   end
 
   def register_write(cell, value="00")
-    value.hex_to_binary!(8) unless value.is_bitstring?
-    @registers.write(cell, value)
+    if is_valid_register_address?(cell)
+      value.hex_to_binary!(8) unless value.is_bitstring?
+      @registers.write(cell, value)
+    else
+      raise Bolverk::InvalidMemoryAddress, "No such register address: #{cell}"
+    end
   end
 
  private
+
+  def is_valid_memory_address?(cell)
+    value = cell.is_bitstring? ? cell.binary_to_hex : cell
+    value.upcase =~ /^[0-9A-F]{2}$/
+  end
+
+  def is_valid_register_address?(cell)
+    value = cell.is_bitstring? ? cell.binary_to_hex : cell
+    value.upcase =~ /^[0-9A-F]{1}$/
+  end
 
   # Each instruction requires two cells of main memory, so
   # we snap the argument into byte-size chunks.

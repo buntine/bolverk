@@ -1,8 +1,8 @@
 class String
 
-  def is_bitstring?
+  def is_bitstring?(min=4)
     # A little stupid, but I want these to return a boolean over 0/nil.
-    !(self =~ /^[01]+$/).nil?
+    !(self =~ /^[01]{#{min},}$/).nil?
   end
 
   def is_hexadecimal?
@@ -32,7 +32,7 @@ class String
 
   # Sourced from: http://pleac.sourceforge.net/pleac_ruby/numbers.html
   def binary_to_decimal(excess=0)
-    raise RuntimeError, "Data is not valid Binary: #{self}" unless self.is_bitstring?
+    raise RuntimeError, "Data is not valid Binary: #{self}" unless self.is_bitstring?(1)
 
     [("0"*32+self.to_s)[-32..-1]].pack("B32").unpack("N")[0] - excess
   end
@@ -41,7 +41,14 @@ class String
     raise RuntimeError, "Data is not valid Binary: #{self}" unless self.is_bitstring?
 
     decimal = self.binary_to_decimal
-    decimal.to_s(base=16).upcase
+    hex = decimal.to_s(base=16).upcase
+
+    # Pad to preserve leading zeroes in bitstring.
+    if self.length % 4 == 0
+      hex = hex.rjust((self.length / 4), "0")
+    end
+
+    hex
   end
 
   # Returns an n-bit string. Smaller values are padded

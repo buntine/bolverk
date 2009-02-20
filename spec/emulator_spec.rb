@@ -55,7 +55,26 @@ describe Bolverk::Emulator do
 
     it "should raise exception if program is too large for memory"
 
-    it "should raise exception if memory cell does not exist"
+  end
+
+  describe "when loading a program into memory" do
+
+    it "should raise exception if memory cell does not exist" do
+      @machine = Bolverk::Emulator.new
+
+      lambda {
+        @machine.load_program_into_memory("FFF", [ '3A06', '14E2', 'C000' ])
+      }.should raise_error(Bolverk::InvalidMemoryAddress)
+    end
+
+    it "should raise exception if inserting into last memory cell" do
+      @machine = Bolverk::Emulator.new
+
+      lambda {
+        @machine.load_program_into_memory("FF", [ 'C000' ])
+      }.should raise_error(Bolverk::InvalidMemoryAddress)
+    end
+
 
   end
 
@@ -109,42 +128,6 @@ describe Bolverk::Emulator do
       @machine.main_memory[164..255].should eql([ "0" * 8 ] * 92)
     end
 
-    it "should raise exception is memory location does not exist"
-
-  end
-
-  describe "when loading multiple values into memory" do
-
-    before(:all) do
-      @machine = Bolverk::Emulator.new
-      @machine.load_values_into_memory("A3", [ "BB", "CC", "23" ])
-    end
-
-    it "should modify main memory" do
-      @machine.main_memory.should_not eql(@null_memory)
-    end
-
-    it "should only store binary data in main memory" do
-      @machine.main_memory.each do |cell|
-        cell.should match(/[0-1]{8}/)
-      end
-    end
-
-    it "should store the correct data in the correct location" do
-      # NOTE: A3 is 163 in decimal.
-
-      @machine.main_memory[163..165].should eql([ "10111011", "11001100", "00100011" ])
-    end
-
-    it "should leave the rest of main memory alone" do
-      @machine.main_memory[0..162].should eql([ "0" * 8 ] * 163)
-      @machine.main_memory[166..255].should eql([ "0" * 8 ] * 90)
-    end
-
-    it "should warn when end of memory has been reached and data is lost"
-
-    it "should raise exception is memory location does not exist"
-
   end
 
   describe "when fetching a value from memory" do
@@ -167,6 +150,22 @@ describe Bolverk::Emulator do
 
   end
 
+  describe "when accessing incorrect locations in memory" do
+
+    before do
+      @machine = Bolverk::Emulator.new
+    end
+
+    it "should raise exception if read location does not exist" do
+      lambda { @machine.memory_read("HELL") }.should raise_error(Bolverk::InvalidMemoryAddress)
+    end
+
+    it "should raise exception if write location does not exist" do
+      lambda { @machine.memory_write("BELL", "B1") }.should raise_error(Bolverk::InvalidMemoryAddress)
+    end
+
+  end
+
   describe "when fetching a value from a register" do
 
     before(:all) do
@@ -184,11 +183,9 @@ describe Bolverk::Emulator do
       @machine.register_read("2").should eql("00000000")
     end
 
-    it "should raise exception if the register does not exist"
-
   end
 
-  describe "when loading a value into  a register" do
+  describe "when loading a value into a register" do
 
     before(:all) do
       @machine = Bolverk::Emulator.new
@@ -214,7 +211,23 @@ describe Bolverk::Emulator do
       @machine.registers[4..15].should eql([ "0" * 8 ] * 12)
     end
 
-    it "should raise exception if register location does not exist"
+  end
+
+  describe "when accessing incorrect locations in registers" do
+
+    before do
+      @machine = Bolverk::Emulator.new
+    end
+
+    it "should raise exception if read location does not exist" do
+      lambda { @machine.register_read("HELL") }.should raise_error(Bolverk::InvalidMemoryAddress)
+      lambda { @machine.register_read("12") }.should raise_error(Bolverk::InvalidMemoryAddress)
+    end
+
+    it "should raise exception if write location does not exist" do
+      lambda { @machine.register_write("BELL", "B1") }.should raise_error(Bolverk::InvalidMemoryAddress)
+      lambda { @machine.register_write("F3", "C4") }.should raise_error(Bolverk::InvalidMemoryAddress)
+    end
 
   end
 
