@@ -146,8 +146,6 @@ describe Bolverk::Emulator do
       @machine.memory_read("13").should eql("00000000")
     end
 
-    it "should raise exception if the memory cell does not exist"
-
   end
 
   describe "when accessing incorrect locations in memory" do
