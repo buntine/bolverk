@@ -28,7 +28,7 @@
 
   - Machine instructions are 16 bits (two bytes) in length, therefore each instruction requires two memory cells.
   - The first 4 bits make up the op-code. The following 12 bits make up the operand field.
-  - See the LANGUAGE_SPEC document for a listing of the available instrctions.
+  - See the LANGUAGE_SPEC document for a listing of the available instructions.
 
 2) Storing Integers and Fractions
 
