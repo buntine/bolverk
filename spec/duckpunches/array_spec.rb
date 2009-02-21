@@ -23,7 +23,7 @@ describe String do
     @array.should eql([ "DA", "FF", "00111110" ])
   end
 
-  it "should be able to store value in array using hexadecimal" do
+  it "should be able to store value in array using binary" do
     @array.write("0010", "11111110")
     @array.should eql([ "DA", "29", "11111110" ])
   end
