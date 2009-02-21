@@ -1,4 +1,4 @@
-# Setup namespace.
+# Setup root namespace.
 module Bolverk; end
 
 # Setup custom exceptions.

@@ -27,7 +27,13 @@ describe Bolverk::Operations::BinaryAdd do
         @machine.registers[4].should eql("01011100")
       end
 
-      it "should raise error in the case of an overflow"
+      it "should raise error in the case of an overflow" do
+        # NOTE: The first instruction with now equate to 226, which cannot be stored with 8 bits.
+        @machine.register_write("2", "71")
+        @machine.register_write("3", "71")
+
+        lambda { @machine.perform_machine_cycle }.should raise_error(Bolverk::OverflowError)
+      end
 
     end
   
@@ -50,7 +56,13 @@ describe Bolverk::Operations::BinaryAdd do
         @machine.registers[7].should eql("10110001")
       end
 
-      it "should raise error in the case of an overflow"
+      it "should raise error in the case of an overflow" do
+        # NOTE: The first instruction with now equate to -158, which cannot be stored with 8 bits.
+        @machine.register_write("5", "B1")
+        @machine.register_write("6", "B1")
+
+        lambda { @machine.perform_machine_cycle }.should raise_error(Bolverk::OverflowError)
+      end
 
     end
 
@@ -72,8 +84,6 @@ describe Bolverk::Operations::BinaryAdd do
         # NOTE: F0 (-16) + 3C (60) = 00101100 (44)
         @machine.registers[5].should eql("00101100")
       end
-
-      it "should raise error in the case of an overflow"
 
     end
 

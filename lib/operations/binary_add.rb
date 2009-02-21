@@ -13,9 +13,14 @@ class Bolverk::Operations::BinaryAdd < Bolverk::Operations::Base
     operand_a = decode_twos_complement(@emulator.register_read(@register_a))
     operand_b = decode_twos_complement(@emulator.register_read(@register_b))
 
-    result = encode_twos_complement(operand_a + operand_b)
+    result = operand_a + operand_b
 
-    @emulator.register_write(@destination, result)
+    # Ensure the value can be encoded with 8-bits.
+    if (-125..124).include?(result)
+      @emulator.register_write(@destination, encode_twos_complement(result))
+    else
+      raise Bolverk::OverflowError, "Cannot store integer: #{result}"
+    end
   end
 
  private
