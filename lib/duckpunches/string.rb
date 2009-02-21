@@ -27,7 +27,12 @@ class String
 
     size = self.length
     decimal = self.binary_to_decimal + amount
-    self.replace(decimal.to_s(base=2).rjust(size, "0"))
+
+    if decimal > 255
+      raise Bolverk::OverflowError, "Cannot store decimal value: #{decimal}"
+    else
+      self.replace(decimal.to_s(base=2).rjust(size, "0"))
+    end
   end
 
   # Sourced from: http://pleac.sourceforge.net/pleac_ruby/numbers.html
@@ -37,6 +42,8 @@ class String
     [("0"*32+self.to_s)[-32..-1]].pack("B32").unpack("N")[0] - excess
   end
 
+  # Converts from base-2 to base-16.
+  # "00111010" => "3A"
   def binary_to_hex
     raise RuntimeError, "Data is not valid Binary: #{self}" unless self.is_bitstring?
 

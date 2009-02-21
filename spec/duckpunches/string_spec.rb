@@ -41,7 +41,11 @@ describe String do
     data.should eql("01100101")
   end
 
-  it "should raise exception if overflow occurs when incrementing"
+  it "should raise exception if overflow occurs when incrementing" do
+    # 255 to 256
+    data = "11111111"
+    lambda { data.increment! }.should raise_error(Bolverk::OverflowError)
+  end
 
   it "should raise exception if data is invalid when incrementing" do
     data = "balls to the walls"
@@ -69,11 +73,38 @@ describe String do
     lambda { data.binary_to_decimal }.should raise_error(RuntimeError)
   end
 
-  it "should be able to convert from binary to hexadecimal"
-  it "should raise exception if string value is not binary"
+  it "should be able to convert from binary to hexadecimal" do
+    data = "11100110"
+    data.binary_to_hex.should eql("E6")
+  end
 
-  it "should be able to convert from hexadecimal to binary"
-  it "should be able to pad binary to appropriate length"
-  it "should raise exception if string value is not hexadecimal"
+  it "should be able to pad with leading zeroes when converting from binary to hexadecimal" do
+    data = "00000110"
+    data.binary_to_hex.should eql("06")
+  end
+
+  it "should raise exception if string value is not binary" do
+    data = "BEHERIT"
+    lambda { data.binary_to_hex }.should raise_error(RuntimeError)
+    data = "10012"
+    lambda { data.binary_to_hex }.should raise_error(RuntimeError)
+  end
+
+  it "should be able to convert from hexadecimal to binary" do
+    data = "0B"
+    data.hex_to_binary(8).should eql("00001011")
+  end
+
+  it "should default to 16 bits when converting from hexadecimal to binary" do
+    data = "AB"
+    data.hex_to_binary.should eql("0000000010101011")
+  end
+
+  it "should raise exception if string value is not hexadecimal" do
+    data = "Cremation"
+    lambda { data.hex_to_binary }.should raise_error(RuntimeError)
+    data = "GB"
+    lambda { data.hex_to_binary }.should raise_error(RuntimeError)
+  end
 
 end
