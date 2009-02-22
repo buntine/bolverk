@@ -22,33 +22,6 @@ class Bolverk::Operations::FloatingPointAdd < Bolverk::Operations::Base
 
  private
 
-  # Reads in a binary string that is stored in floating-point
-  # notation and transforms it into a float.
-  def decode_floating_point(bitstring)
-    sign_bit = bitstring[0..0]
-    exponent = bitstring[1..3]
-    mantissa = bitstring[4..7]
-
-    # Read in the exponent using excess-four.
-    radix_point = exponent.binary_to_decimal(4)
-
-    # Shift the radix to the left.
-    if radix_point <= 0
-      whole = 0
-      mantissa = mantissa.rjust(4 + radix_point.abs, "0")
-    # Shift the radix to the right.
-    else
-      whole = mantissa[0, radix_point]
-      whole = whole.binary_to_decimal
-      mantissa = mantissa[radix_point..3]
-    end
-
-    fraction = fractional_binary_to_decimal(mantissa)
-    result = whole + fraction
-
-    (sign_bit == "0") ? result : -result
-  end
-
   # Read in a float and transforms it into a bitstring suitable
   # for storage in floating-point notation.
   def encode_floating_point(float)
@@ -74,23 +47,6 @@ class Bolverk::Operations::FloatingPointAdd < Bolverk::Operations::Base
     sign_bit = (float < 0) ? "1" : "0"
 
     (sign_bit + exponent + mantissa).ljust(8, "0")
-  end
-
-  # Generates a decimal representation of a fractional
-  # portion of a binary number.
-  def fractional_binary_to_decimal(bitstring)
-    fraction = 0.0
-    precision = 2
-
-    # Traverse the bitstring, each time adding
-    # the fractional portion to our total and raising
-    # the precision to the next power.
-    bitstring.each_byte do |bit|
-      fraction += bit.chr.to_f / precision
-      precision *= 2
-    end
-
-    fraction
   end
 
   # Generates a binary representation of a fractional

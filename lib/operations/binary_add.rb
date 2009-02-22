@@ -25,28 +25,16 @@ class Bolverk::Operations::BinaryAdd < Bolverk::Operations::Base
 
  private
 
-   def decode_twos_complement(data)
-     # Value is negative, decode it to get the real value.
-     if data[0,1] == "1"
-       decoded_value = data.clone
-       decoded_value.complement!
-       decoded_value.increment!
-       -decoded_value.binary_to_decimal
-     else
-       data.binary_to_hex.hex
-     end
-   end
+  def encode_twos_complement(number, size=8)
+    bitstring = number.abs.to_s(base=2).rjust(size, "0")
 
-   def encode_twos_complement(number, size=8)
-     bitstring = number.abs.to_s(base=2).rjust(size, "0")
+    # Encode as negative value.
+    if number < 0
+      bitstring.complement!
+      bitstring.increment!
+    end
 
-     # Encode as negative value.
-     if number < 0
-       bitstring.complement!
-       bitstring.increment!
-     end
-
-     bitstring
-   end
+    bitstring
+  end
 
 end
