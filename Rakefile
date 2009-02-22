@@ -10,3 +10,12 @@ Spec::Rake::SpecTask.new(:spec) do |t|
   t.spec_files = FileList[ 'spec/**/*_spec.rb' ]
 end
 
+desc "Run all specs and generate RCov report"
+Spec::Rake::SpecTask.new('cov') do |t|
+  t.spec_files = FileList['spec/**/*.rb']
+  t.spec_opts = ["--colour"]
+  t.rcov = true
+  t.rcov_opts = ['-T --no-html --exclude', 'spec\/,gems\/']
+end
+
+
