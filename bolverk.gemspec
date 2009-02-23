@@ -9,19 +9,17 @@ Gem::Specification.new do |s|
   s.authors = ["Andrew Buntine"]
   
   s.description = <<-END
-Hackless generates CMS driven websites from unique designs. We aim to make this possible for
-non-programmers.
+    Bolverk is an emulator for a typical machine language. I have developed it in an attempt to
+    better understand the way machines work at a low-level and potentially as an educational tool
+    for students who prefer to see a machine language in action in a virtual environment.
 
-Hackless makes ruby on rails sites. A template site is available from the website in
-'examples/template'.
+    With Bolverk, you can write a machine language program, and then step through the operation one
+    "machine cycle" at time. At each point, you can dissect main memory and all registers. This is a
+    great way to see how the program effects memory in realtime.
 
-Plugins include:
-  ActiveScaffold: Generates the admin interface.
-  File Column: Handles file uploads. It uses rMagic to resize images.
-  Restful Authentication: Admin area authentication.
-  Will Paginate: Pagenation on pagenated listing pages.
-  Hackless: Provides a model generator that'll create the appropriate admin area.
-END
+    Programs are written in base-16 (hexadecimal). The language design is based on the one described
+    in J. Glenn Brookshears textbook -- Computer Science: An Overview (3rd edition, 1991).
+  END
   
   s.files = FileList["{lib}/**/*", "Rakefile", "bolverk.gemspec"].to_a
   s.test_files = FileList["{spec}/**/*spec.rb", "{spec}/**/*helper.rb"].to_a
