@@ -1,6 +1,7 @@
+require 'rake'
 require 'spec'
 require 'spec/rake/spectask'
-require 'rake'
+require 'rake/gempackagetask'
 
 task :default => :spec
 
@@ -18,4 +19,9 @@ Spec::Rake::SpecTask.new('cov') do |t|
   t.rcov_opts = ['-T --no-html --exclude', 'spec\/,gems\/']
 end
 
-
+spec = eval(File.read("bolverk.gemspec"))
+ 
+Rake::GemPackageTask.new(spec) do |pkg|
+  # pkg.need_zip = true
+  # pkg.need_tar = true
+end
