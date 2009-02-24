@@ -1,4 +1,4 @@
-class Bolverk::Operations::Print < Bolverk::Operations::Base
+class Bolverk::Operations::PrintFromMemory < Bolverk::Operations::Base
 
   map_to "1101"
 
@@ -13,9 +13,9 @@ class Bolverk::Operations::Print < Bolverk::Operations::Base
   # Any other value (3-F) in the first operand will default to ASCII character code.
   #
   # Example:
-  #   C05A => 1101000001011010 => Print the value stored in memory address 5A to stdout (as ASCII character).
-  #   C15A => 1101000101011010 => Print the value stored in memory address 5A to stdout (as decimal integer).
-  #   C25A => 1101001001011010 => Print the value stored in memory address 5A to stdout (as decimal float).
+  #   D05A => 1101000001011010 => Print the value stored in memory address 5A to stdout (as ASCII character).
+  #   D15A => 1101000101011010 => Print the value stored in memory address 5A to stdout (as decimal integer).
+  #   D25A => 1101001001011010 => Print the value stored in memory address 5A to stdout (as decimal float).
   def execute
     value = @emulator.memory_read(@memory_cell)
 
