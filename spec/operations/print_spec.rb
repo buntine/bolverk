@@ -33,10 +33,10 @@ describe Bolverk::Operations::Print do
       end
 
       # NOTE: 5A = "Z" in ASCII.
-      out1.should eql("Z\n")
+      out1.should eql("Z")
 
       # NOTE: 59 = "Y" in ASCII.
-      out2.should eql("Y\n")
+      out2.should eql("Y")
     end
 
     it "should print out the correct decimal equivelant of a binary number" do
@@ -52,10 +52,10 @@ describe Bolverk::Operations::Print do
       end
 
       # NOTE: 22 = 34 in decimal.
-      out1.should eql("34\n")
+      out1.should eql("34")
 
       # NOTE: AB = -85 in ASCII.
-      out2.should eql("-85\n")
+      out2.should eql("-85")
     end
 
     it "should print out the correct decimal equivelant of a floating-point number" do
@@ -71,10 +71,10 @@ describe Bolverk::Operations::Print do
       end
 
       # NOTE: 6B = 2.75 in decimal.
-      out1.should eql("2.75\n")
+      out1.should eql("2.75")
 
       # NOTE: BC = -0.375 in decimal.
-      out2.should eql("-0.375\n")
+      out2.should eql("-0.375")
     end
 
   end

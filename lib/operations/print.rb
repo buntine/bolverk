@@ -21,11 +21,11 @@ class Bolverk::Operations::Print < Bolverk::Operations::Base
 
     case @method
       when "0001"
-        puts decode_twos_complement(value)
+        print decode_twos_complement(value)
       when "0010"
-        puts decode_floating_point(value)
+        print decode_floating_point(value)
       else
-        puts value.binary_to_decimal.chr
+        print value.binary_to_decimal.chr
     end
   end
 
