@@ -1,12 +1,17 @@
 class Bolverk::Emulator
   include Bolverk::Operations
 
-  attr_reader :main_memory, :registers, :instruction_register
+  attr_reader :registers, :instruction_register
   attr_accessor :program_counter
 
   def initialize
-    @main_memory = [ "0" * 8 ] * 256 
+    @main_memory = Bolverk::MainMemory.new
     @registers = [ "0" * 8 ] * 16
+  end
+
+  def main_memory
+    # Keep the object hidden and just return the raw stack.
+    @main_memory.stack
   end
 
   # Initializes the program counter to the given memory cell.
@@ -32,7 +37,6 @@ class Bolverk::Emulator
     end
   end
 
-  # Programs should be written in binary or hexadecimal.
   # A program must be passed in as an array of individual
   # instructions.
   def load_program_into_memory(cell, program=[])
