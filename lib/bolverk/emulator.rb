@@ -9,8 +9,8 @@ class Bolverk::Emulator
     @registers = [ "0" * 8 ] * 16
   end
 
+  # Keep the object hidden and just return the raw stack.
   def main_memory
-    # Keep the object hidden and just return the raw stack.
     @main_memory.stack
   end
 
@@ -37,32 +37,16 @@ class Bolverk::Emulator
     end
   end
 
-  # A program must be passed in as an array of individual
-  # instructions.
   def load_program_into_memory(cell, program=[])
-    raise Bolverk::InvalidMemoryAddress unless is_valid_memory_address?(cell) and !cell.upcase.eql?("FF")
-
-    program.each_with_index do |instruction, index|
-      memory_cell = cell.hex + (index * 2)
-      insert_instruction_into_memory(instruction, memory_cell)
-    end
+    @main_memory.load_instructions(cell, program)
   end
 
   def memory_read(cell)
-    if is_valid_memory_address?(cell)
-      @main_memory.read(cell)
-    else
-      raise Bolverk::InvalidMemoryAddress, "No such memory address: #{cell}"
-    end
+    @main_memory.read(cell)
   end
 
   def memory_write(cell, value="00")
-    if is_valid_memory_address?(cell)
-      value.hex_to_binary!(8) unless value.is_bitstring?
-      @main_memory.write(cell, value)
-    else
-      raise Bolverk::InvalidMemoryAddress, "No such memory address: #{cell}"
-    end
+    @main_memory.write(cell, value)
   end
 
   def register_read(cell)
@@ -84,28 +68,14 @@ class Bolverk::Emulator
 
  private
 
-  def is_valid_memory_address?(cell)
-    value = cell.is_bitstring? ? cell.binary_to_hex : cell
-    value.upcase =~ /^[0-9A-F]{2}$/
-  end
-
   def is_valid_register_address?(cell)
     value = cell.is_bitstring? ? cell.binary_to_hex : cell
     value.upcase =~ /^[0-9A-F]{1}$/
   end
 
-  # Each instruction requires two cells of main memory, so
-  # we snap the argument into byte-size chunks.
-  def insert_instruction_into_memory(instruction, cell=0)
-    instruction.hex_to_binary! unless instruction.is_bitstring?
-    @main_memory[cell] = instruction[0..7]
-    @main_memory[cell + 1] = instruction[8..15]
-  end
-
   # Fetches the next program instruction and store it in the instruction register.
   def update_instruction_register
-    cell = @program_counter.hex
-    @instruction_register.update_with @main_memory[cell, 2].join
+    @instruction_register.update_with @main_memory.read_instruction(@program_counter)
   end
 
   # Increments the program counter by two places (each instruction requires two memory cells).
