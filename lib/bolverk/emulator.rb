@@ -1,17 +1,20 @@
 class Bolverk::Emulator
   include Bolverk::Operations
 
-  attr_reader :registers, :instruction_register
+  attr_reader :instruction_register
   attr_accessor :program_counter
 
   def initialize
     @main_memory = Bolverk::MainMemory.new
-    @registers = [ "0" * 8 ] * 16
+    @registers = Bolverk::Registers.new
   end
 
-  # Keep the object hidden and just return the raw stack.
   def main_memory
     @main_memory.stack
+  end
+
+  def registers
+    @registers.stack
   end
 
   # Initializes the program counter to the given memory cell.
@@ -20,7 +23,7 @@ class Bolverk::Emulator
     @instruction_register = Bolverk::InstructionRegister.new
   end
 
-  # Executes a single program instruction.
+  # Loads, parses and executes a single program instruction.
   def perform_machine_cycle
     raise Bolverk::NullProgramCounterError if @program_counter.nil?
 
@@ -50,28 +53,14 @@ class Bolverk::Emulator
   end
 
   def register_read(cell)
-    if is_valid_register_address?(cell)
-      @registers.read(cell)
-    else
-      raise Bolverk::InvalidMemoryAddress, "No such register address: #{cell}"
-    end
+    @registers.read(cell)
   end
 
   def register_write(cell, value="00")
-    if is_valid_register_address?(cell)
-      value.hex_to_binary!(8) unless value.is_bitstring?
-      @registers.write(cell, value)
-    else
-      raise Bolverk::InvalidMemoryAddress, "No such register address: #{cell}"
-    end
+    @registers.write(cell, value)
   end
 
  private
-
-  def is_valid_register_address?(cell)
-    value = cell.is_bitstring? ? cell.binary_to_hex : cell
-    value.upcase =~ /^[0-9A-F]{1}$/
-  end
 
   # Fetches the next program instruction and store it in the instruction register.
   def update_instruction_register
