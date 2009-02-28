@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   
   s.name = "bolverk"
-  s.version = "0.0.1"
-  s.date = "2009-02-23"
+  s.version = "0.0.2"
+  s.date = "2009-02-28"
   s.summary = "Bolverk is a basic machine emulator for educational purposes"
   s.homepage = "https://bolverk.andrewbuntine.com"
   s.email = "info@andrewbuntine.com"
