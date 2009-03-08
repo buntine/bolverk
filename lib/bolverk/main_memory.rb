@@ -27,7 +27,7 @@ class Bolverk::MainMemory < Bolverk::Stack
 
   def write(cell, value="00")
     validate(cell) do
-      value.hex_to_binary!(8) unless value.is_bitstring?
+      value.hex_to_binary!(8) unless value.is_bitstring?(8)
       set(cell, value)
     end
   end
@@ -53,7 +53,7 @@ class Bolverk::MainMemory < Bolverk::Stack
   # Each instruction requires two cells of main memory, so
   # we snap the argument into byte-size chunks.
   def insert_instruction(cell, instruction)
-    instruction.hex_to_binary! unless instruction.is_bitstring?
+    instruction.hex_to_binary! unless instruction.is_bitstring?(16)
     write(cell, instruction[0..7])
     write((cell.hex + 1).to_s(base=16).rjust(2, "0"), instruction[8..15])
   end
