@@ -1,0 +1,44 @@
+=========================================
+===      LANGUAGE SPECIFICATION       ===
+===         Bolverk v.0.0.3           ===
+=========================================
+
+1) Disclaimer
+
+   The machine language implemented into Bolverk is based largely on the language described
+   in Appendix B of the textbook "Computer Science: An Overview" by J. Glenn Brookshear (ISBN
+   0-8053-0264-6).
+
+   I have changed and added things wherever I saw fit.
+
+2) Operations
+
+   Op-Code | Operand | Description
+   -------------------------------------------------------------------------------------------------
+       1   |   RXY   | LOAD the register R with the contents of the memory cell whose address is XY.
+       2   |   RXY   | LOAD the resister R with the value XY.
+       3   |   RXY   | STORE the contents of register R in the memory cell whose address is XY.
+       4   |   0RS   | MOVE the contents of register R to register S.
+       5   |   STR   | ADD the contents of registers R and S as though they were binary numbers and
+           |         | store the result in register T.
+       6   |   STR   | ADD the contents of registers R and S as though they were floating-point numbers
+           |         | and store the result in register T.
+       7   |   STR   | OR the contents of registers S and T and store the contents in register R.
+       8   |   STR   | AND the contents of registers S and T and store the contents in register R.
+       9   |   STR   | EXCLUSIVE OR (XOR) the contents of registers S and T and store the contents
+                       in register R.
+       A   |   R0X   | ROTATE the contents of register R to the right, in a circular-motion X times.
+       B   |   RXY   | JUMP to the instruction stored at the memory cell XY if the contents of register
+                       R is equal to the contents of register 0. Otherwise, continue onto the next
+                       instruction as per normal.
+       C   |   000   | HALT execution and reset the program counter.
+       D   |   MXY   | PRINT the contents of the memory cell whose address is XY to the standard output.
+                       The M parameter indicates the type of data:
+                       0 => ASCII character
+                       1 => Binary number (as decimal)
+                       2 => Floating-point number
+       E   |   MXY   | PRINT the value represented by XY to the standard output.
+                       The M parameter indicates the type of data:
+                       0 => ASCII character
+                       1 => Binary number (as decimal)
+                       2 => Floating-point number
