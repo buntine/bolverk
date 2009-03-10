@@ -11,14 +11,19 @@
 
    I have changed and added things wherever I saw fit.
 
-2) Operations
+2) Notes
+
+   Each operand consists of hexadecimal digits. R, S and T represtent registers whereas X and Y
+   represent non-register values (such as a memory cell).
+
+3) Operations
 
    Op-Code | Operand | Description
    -------------------------------------------------------------------------------------------------
        1   |   RXY   | LOAD the register R with the contents of the memory cell whose address is XY.
        2   |   RXY   | LOAD the resister R with the value XY.
        3   |   RXY   | STORE the contents of register R in the memory cell whose address is XY.
-       4   |   0RS   | MOVE the contents of register R to register S.
+       4   |   0RS   | MOVE the contents of register R to register S (acts as a COPY).
        5   |   STR   | ADD the contents of registers R and S as though they were binary numbers and
            |         | store the result in register T.
        6   |   STR   | ADD the contents of registers R and S as though they were floating-point numbers
