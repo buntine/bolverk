@@ -23,18 +23,4 @@ class Bolverk::Operations::BinaryAdd < Bolverk::Operations::Base
     end
   end
 
- private
-
-  def encode_twos_complement(number, size=8)
-    bitstring = number.abs.to_s(base=2).rjust(size, "0")
-
-    # Encode as negative value.
-    if number < 0
-      bitstring.complement!
-      bitstring.increment!
-    end
-
-    bitstring
-  end
-
 end
