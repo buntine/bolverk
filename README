@@ -32,9 +32,9 @@
 
 2) Storing Integers and Fractions
 
-  In order to handle negative values, the emulator stores integers as 8-bit and encoded in
-  Two's Complement Notation. Therefore, the range of numbers than can be stored is -125 to 124. This should
-  be sufficient for educational purposes.
+  To represent signed integers, binary numbers are encoded in Two's Complement Notation.
+  Therefore, the range of numbers than can be stored is -128 to 127. This should be sufficient
+  for educational purposes.
 
   Fractions are stored in Floating Point Notation using the following layout: 0 000 0000
 
@@ -42,5 +42,7 @@
     2..4) Exponent field, encoded in Excess Four Notation
     5..8) Mantissa field
 
-  It's worth noting that my Floating Point implemenation is very limited as only one byte is reserved per number. Therefore,
-  round-off errors and overflows are going to be rather common unless you are dealing with a very small range of numbers (1/256 to 7 1/2).
+  It's worth noting that my Floating Point implemenation is very limited as only one byte is
+  reserved per number (most systems would use atleast 23 bits). Therefore, round-off errors
+  and overflows are going to be rather common unless you are dealing with a very small range
+  of numbers (roughly 1/256 to 7 1/2).
