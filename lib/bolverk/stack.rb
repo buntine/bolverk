@@ -5,6 +5,10 @@ class Bolverk::Stack
     @stack = [ "0" * 8 ] * scope
   end
 
+  def reset!
+    @stack.map! { "0" * 8 }
+  end
+
  protected
 
   def set(index, data)

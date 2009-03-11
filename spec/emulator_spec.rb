@@ -24,7 +24,7 @@ describe Bolverk::Emulator do
 
   end
 
-  describe "when loading a program into memory" do
+  describe "after loading a program into memory" do
 
     before(:all) do
       @machine = Bolverk::Emulator.new
@@ -75,6 +75,34 @@ describe Bolverk::Emulator do
       }.should raise_error(Bolverk::InvalidMemoryAddress)
     end
 
+  end
+
+  describe "when rebooting/reseting the emulator" do
+
+    before do
+      @machine = Bolverk::Emulator.new
+      @machine.load_program_into_memory("00", [ '3A06', '14E2', 'C000' ])
+      @machine.register_write("0", "FF")
+      @machine.register_write("2", "3D")
+    end
+
+    it "should clear all memory cells" do
+      @machine.reboot!
+
+      @machine.main_memory.should eql(["00000000"] * 256)
+    end
+
+    it "should clear all registers" do
+      @machine.reboot!
+
+      @machine.registers.should eql(["00000000"] * 16)
+    end
+
+    it "should reset the Program Counter" do
+      @machine.reboot!
+
+      @machine.program_counter.should be_nil
+    end
 
   end
 

@@ -40,6 +40,12 @@ class Bolverk::Emulator
     end
   end
 
+  def reboot!
+    @registers.reset!
+    @main_memory.reset!
+    @program_counter = nil
+  end
+
   def load_program_into_memory(cell, program=[])
     @main_memory.load_instructions(cell, program)
   end
