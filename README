@@ -43,6 +43,6 @@
     5..8) Mantissa field
 
   It's worth noting that my Floating Point implemenation is very limited as only one byte is
-  reserved per number (most systems would use atleast 23 bits). Therefore, round-off errors
+  reserved per number (most systems would use atleast 32 bits). Therefore, round-off errors
   and overflows are going to be rather common unless you are dealing with a very small range
   of numbers (roughly 1/256 to 7 1/2).
