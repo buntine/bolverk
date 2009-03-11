@@ -1,5 +1,3 @@
-require 'lib/operations/class_methods'
-
 class Bolverk::Operations::Base
   include Bolverk::Operations::ClassMethods
 

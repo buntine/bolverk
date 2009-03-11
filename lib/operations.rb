@@ -19,4 +19,5 @@ module Bolverk::Operations
 
 end
 
+require File.dirname(__FILE__) + "/operations/class_methods"
 require File.dirname(__FILE__) + "/operations/base"
