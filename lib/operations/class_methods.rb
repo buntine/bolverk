@@ -6,6 +6,10 @@
 module Bolverk::Operations::ClassMethods
 
   def encode_twos_complement(number, size=8)
+    unless (-128..127).include?(number)
+      raise Bolverk::OverflowError, "Cannot store integer: #{number}"
+    end
+
     bitstring = number.abs.to_s(base=2).rjust(size, "0")
 
     # Encode as negative value.
@@ -34,7 +38,7 @@ module Bolverk::Operations::ClassMethods
     fraction = fractional_decimal_to_binary(float % 1)
 
     if whole == 0
-      # Store an exponent that lets the decoded know which direction the
+      # Store an exponent that lets the decoder know which direction the
       # radix point needs to move in relative to the mantissa.
       if fraction.length > 4
         exponent = (4 - (fraction.length - 4)).to_s(base=2).rjust(3, "0")
@@ -51,7 +55,13 @@ module Bolverk::Operations::ClassMethods
     mantissa << (fraction[-4, 4] || fraction)
     sign_bit = (float < 0) ? "1" : "0"
 
-    (sign_bit + exponent + mantissa).ljust(8, "0")
+    result = (sign_bit + exponent + mantissa).ljust(8, "0")
+
+    unless result.length == 8
+      raise Bolverk::OverflowError, "Cannot store float: #{float}"
+    else
+      result
+    end
   end
 
   def decode_floating_point(bitstring)

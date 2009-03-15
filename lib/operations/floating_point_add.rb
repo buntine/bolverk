@@ -12,7 +12,6 @@ class Bolverk::Operations::FloatingPointAdd < Bolverk::Operations::Base
   def execute
     operand_a = decode_floating_point(@emulator.register_read(@register_a))
     operand_b = decode_floating_point(@emulator.register_read(@register_b))
-
     result = encode_floating_point(operand_a + operand_b)
 
     @emulator.register_write(@destination, result)
