@@ -76,7 +76,7 @@ class Bolverk::Emulator
   # Increments the program counter by two places (each instruction requires two memory cells).
   def increment_program_counter
     counter = @program_counter.hex + 2
-    @program_counter = counter.to_s(base=16).upcase
+    @program_counter = counter.to_s(base=16).rjust(2, "0").upcase
   end
 
 end
