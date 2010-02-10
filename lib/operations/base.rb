@@ -59,11 +59,6 @@ class Bolverk::Operations::Base
     end
   end
 
- protected
-
-  # The following methods are used in multiple operations, thus I
-  # feel this is the most appropriate place for them.
-
 end
 
 Dir[File.dirname(__FILE__) + "/*.rb"].each do |file|
