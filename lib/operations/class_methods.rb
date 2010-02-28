@@ -1,7 +1,8 @@
 
-# Generic helper methods without side-effects. I have bunched them
-# here so they can be easily accessed by any part of my app (or
-# implementing software).
+# Generic helper methods (all implement functions without
+# side-efects). I have bunched them here so they can be 
+# easily accessed by any part of my app (or implementing
+# software).
 
 module Bolverk::Operations::ClassMethods
 
