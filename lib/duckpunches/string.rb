@@ -29,7 +29,7 @@ class String
     decimal = self.binary_to_decimal + amount
 
     if decimal > 255
-      raise Bolverk::OverflowError, "Cannot store decimal value: #{decimal}"
+      raise Bolverk::OverflowError, "Cannot reference decimal value: #{decimal}"
     else
       self.replace(decimal.to_s(base=2).rjust(size, "0"))
     end
