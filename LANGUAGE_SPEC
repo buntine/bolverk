@@ -24,10 +24,10 @@
        2   |   RXY   | LOAD the resister R with the value XY.
        3   |   RXY   | STORE the contents of register R in the memory cell whose address is XY.
        4   |   0RS   | MOVE the contents of register R to register S (acts as a COPY).
-       5   |   STR   | ADD the contents of registers R and S as though they were binary numbers and
-           |         | store the result in register T.
-       6   |   STR   | ADD the contents of registers R and S as though they were floating-point numbers
-           |         | and store the result in register T.
+       5   |   STR   | ADD the contents of registers S and T as though they were binary numbers and
+           |         | store the result in register R.
+       6   |   STR   | ADD the contents of registers S and T as though they were floating-point numbers
+           |         | and store the result in register R.
        7   |   STR   | OR the contents of registers S and T and store the contents in register R.
        8   |   STR   | AND the contents of registers S and T and store the contents in register R.
        9   |   STR   | EXCLUSIVE OR (XOR) the contents of registers S and T and store the contents

@@ -6,7 +6,8 @@
 0) Implementation
 
   App: http://bolverk.andrewbuntine.com
-  Code: http://github.com/buntine/bolverk_ui
+  UI code: http://github.com/buntine/bolverk_ui
+  Language spec: http://github.com/buntine/bolverk/blob/master/LANGUAGE_SPEC
 
 1) Definition
 
